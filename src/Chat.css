@@ -1,0 +1,9 @@
+.messagesWrapper {
+    height: calc(100vh - 100px - 54px - 150px);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.messagesWrapper::-webkit-scrollbar {
+    display: none;
+}
