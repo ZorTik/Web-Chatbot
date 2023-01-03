@@ -1,4 +1,5 @@
 import "./ChatMessage.css";
+import "../Chat.css";
 import {Col, Row} from "react-bootstrap";
 
 const ChatMessageAuthor = ({author}) => {
@@ -12,9 +13,9 @@ const ChatMessageAuthor = ({author}) => {
 const ChatMessage = ({messageObj}) => {
     const {author, message} = messageObj;
     return (
-        <Row>
+        <Row className="chatMessage">
             <ChatMessageAuthor author={author} />
-            <Col style={{
+            <Col className="messageTextContainer" style={{
                 padding: "5px 20px"
             }}><p>{message}</p></Col>
         </Row>

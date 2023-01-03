@@ -11,11 +11,12 @@ const Chat = () => {
     const [messages, setMessages] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [thinking, setThinking] = useState(false);
+    const [history, setHistory] = useState("");
 
     const messagesWrapperRef = useRef();
 
     const makeApiRequest = async (question) => {
-        const response = (await fetch("https://api.openai.com/v1/completions", {
+        const text = (await fetch("https://api.openai.com/v1/completions", {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${process.env.API_KEY}`,
@@ -23,7 +24,7 @@ const Chat = () => {
             },
             body: JSON.stringify({
                 model: "text-davinci-003",
-                prompt: `Q: ${question}\nA:`,
+                prompt: `${history}Q: ${question}\nA:`,
                 temperature: 0,
                 max_tokens: 30,
                 top_p: 1,
@@ -31,9 +32,9 @@ const Chat = () => {
                 presence_penalty: 0.0,
                 stop: ["\n"]
             })
-        }).then(res => res.json()));
-        console.log(response);
-        return response.choices[0].text;
+        }).then(res => res.json())).choices[0].text;
+        setHistory(history + `Q: ${question}\nA: ${text}\n`);
+        return text;
     };
 
     useEffect(() => {
@@ -54,9 +55,7 @@ const Chat = () => {
     }, [thinking, messages, currentQuestion]);
 
     useEffect(() => {
-        console.log("Trying to scroll");
         if(messagesWrapperRef.current) {
-            console.log("Scrolling...");
             messagesWrapperRef.current?.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
@@ -65,7 +64,8 @@ const Chat = () => {
         setValue(e.target.value);
     }
 
-    const handleAddQuestion = () => {
+    const handleAddQuestion = (e) => {
+        e.preventDefault();
         if(value == null || value.length === 0)
             return;
         setMessages([...messages,
@@ -85,12 +85,12 @@ const Chat = () => {
                 }}>{"Bot přemýšlí..."}</p> : null}
                 <div ref={messagesWrapperRef} />
             </div>
-            <Form style={{
+            <Form onSubmit={handleAddQuestion} style={{
                 marginTop: "20px"
             }}>
                 <Form.Group className="d-flex flex-row">
                     <Form.Control type="text" placeholder="Zeptej se mě na něco..." onChange={handleChange} value={value || ""} required />
-                    <Button disabled={currentQuestion != null || thinking} onClick={handleAddQuestion}>Odeslat</Button>
+                    <Button type="submit" disabled={currentQuestion != null || thinking}>Odeslat</Button>
                 </Form.Group>
             </Form>
         </Container>

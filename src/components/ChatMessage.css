@@ -1,7 +1,15 @@
+.chatMessage {
+    margin-bottom: 30px;
+}
+
 .authorPicture {
-    background-color: #eeeeee;
+    background-color: #e8e8e8;
     width: 100px !important;
     height: 100px !important;
     margin-bottom: 15px;
     border-radius: 5px;
+}
+
+.messageTextContainer {
+    padding: 20px !important;
 }
